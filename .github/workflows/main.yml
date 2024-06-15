@@ -1,11 +1,11 @@
-name: Daily Update
+name: Daily tv Update
 
 on:
   schedule:
     - cron: '45 21 * * *'
   workflow_dispatch:
     branches:
-      - main
+      - tv
 
 jobs:
   run_script:
