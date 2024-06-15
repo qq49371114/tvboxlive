@@ -141,13 +141,13 @@ def updateChannelUrlsM3U(channels, template_channels):
 
     with open("live.m3u", "w", encoding="utf-8") as f_m3u:
         f_m3u.write("""#EXTM3U x-tvg-url="https://live.fanmingming.com/e.xml","http://epg.51zmt.top:8000/difang.xml","http://epg.51zmt.top:8000/e.xml","https://epg.112114.xyz/pp.xml"\n""")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="请阅读" tvg-logo="http://175.178.251.183:6689/LR.jpg" group-title="公告",请阅读\n""")
+        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="请阅读-请勿用于非法用途" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",请阅读-本线路只做测试\n""")
         f_m3u.write("https://liuliuliu.tv/api/channels/1997/stream\n")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="yuanzl77.github.io" tvg-logo="http://175.178.251.183:6689/LR.jpg" group-title="公告",yuanzl77.github.io\n""")
+        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="🐯遥遥领先专用🐯" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",🐯遥遥领先专用🐯\n""")
         f_m3u.write("https://liuliuliu.tv/api/channels/233/stream\n")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="更新日期" tvg-logo="http://175.178.251.183:6689/LR.jpg" group-title="公告",更新日期\n""")
+        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="更新日期" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",更新日期\n""")
         f_m3u.write("https://gitlab.com/lr77/IPTV/-/raw/main/%E4%B8%BB%E8%A7%92.mp4\n")
-        f_m3u.write(f"""#EXTINF:-1 tvg-id="1" tvg-name="{current_date}" tvg-logo="http://175.178.251.183:6689/LR.jpg" group-title="公告",{current_date}\n""")
+        f_m3u.write(f"""#EXTINF:-1 tvg-id="1" tvg-name="{current_date}" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",{current_date}\n""")
         f_m3u.write("https://gitlab.com/lr77/IPTV/-/raw/main/%E8%B5%B7%E9%A3%8E%E4%BA%86.mp4\n")
 
         with open("live.txt", "w", encoding="utf-8") as f_txt:
