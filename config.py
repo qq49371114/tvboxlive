@@ -1,5 +1,6 @@
 source_urls = [
     "https://raw.githubusercontent.com/yuanzl77/IPTV/main/直播/央视频道.txt",
+    "http://xn--ihqu10cn4c.xn--v4q818bf34b.top/live.txt",
     "http://120.79.4.185/new/mdlive.txt",
     "https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt",
     "https://tv.youdu.fan:666/live/",
@@ -17,5 +18,6 @@ source_urls = [
 
 url_blacklist = [
     "epg.pw/stream/",
+    "https://sp.4n2.cn/?api=",
     "103.40.13.71:12390/mytv/live.php"
 ]
