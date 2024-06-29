@@ -140,7 +140,7 @@ def updateChannelUrlsM3U(channels, template_channels):
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     with open("live.m3u", "w", encoding="utf-8") as f_m3u:
-        f_m3u.write("""#EXTM3U x-tvg-url="https://live.fanmingming.com/e.xml","http://epg.51zmt.top:8000/difang.xml","http://epg.51zmt.top:8000/e.xml","https://epg.112114.xyz/pp.xml"\n""")
+        f_m3u.write("""#EXTM3U x-tvg-url="https://mirror.ghproxy.com/raw.githubusercontent.com/qq49371114/tviptv/Files/EPG.xml" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}＂\n""")
         f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="请阅读-请勿用于非法用途" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",请阅读-本线路只做测试\n""")
         f_m3u.write("https://liuliuliu.tv/api/channels/1997/stream\n")
         f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="🐯遥遥领先专用🐯" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",🐯遥遥领先专用🐯\n""")
