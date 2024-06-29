@@ -5031,11 +5031,11 @@ CCTV17,http://ottrrs.hl.chinamobile.com/TVOD/88888888/224/3221225765/index.m3u8$
 香港卫视,http://zhibo.hkstv.tv/livestream/mutfysrq.flv
 香港卫视,http://zhibo.hkstv.tv/livestream/mutfysrq/playlist.m3u8?wsSession=8ee59707fee3ef96c922e680-167055218938751&wsIPSercert=d24f6d7c9d3646d9533d492d5209384b&wsMonitor=0
 香港卫视,http://zhibo.hkstv.tv:80/livestream/mutfysrq.flv
-TVBS欢乐,http://154.12.50.54:123/smt.php?id=tvbshuanle_twn
+TVBS欢乐,https://bsex.serv00.net/Smart.php?id=tvbshuanle_twn
 TVBS亚洲,mitv://generationnexxxt.com:19806/5459e179cc3b4ea49e5b6ed6a4f298c9
 TVBS新闻,http://38.64.72.148/hls/modn/list/4006/chunklist1.m3u8
 TVBS新闻,http://38.64.72.148/hls/modn/list/4006/chunklist0.m3u8
-TVBS新闻,http://154.12.50.54:123/smt.php?id=tvbs_n
+TVBS新闻,https://bsex.serv00.net/Smart.php?id=tvbs_n
 TVBS新闻,mitv://generationnexxxt.com:19806/65fa6dc600095b662a8020fe14c65804#mitv://generationnexxxt.com:19806/6a155a5d7bea461b980b4fa559119a60
 TVBS新闻,P2p://generationnexxxt.com:19806/6a155a5d7bea461b980b4fa559119a60
 翡翠台,http://36.36.200.212:9901/tsfile/live/1008_1.m3u8?key=txiptv&url=tvzb.com
@@ -5055,7 +5055,7 @@ TVBS新闻,P2p://generationnexxxt.com:19806/6a155a5d7bea461b980b4fa559119a60
 无线新闻,http://php.jdshipin.com:8880/smt.php?id=inews_twn
 无线新闻,mitv://generationnexxxt.com:19806/85a50e6db781406bacc41b10a75a70d5#mitv://147.135.39.171:9906/65e067d500043d6d2f5b0fce7ad17a25
 无线新闻,P2p://147.135.39.171:9906/65e067d500043d6d2f5b0fce7ad17a25
-三立新闻,http://154.12.50.54:123/smt.php?id=sanlitaiwan
+三立新闻,https://bsex.serv00.net/Smart.php?id=sanlitaiwan
 三立新闻,mitv://generationnexxxt.com:19806/96118abbe8ee48ddaef2c9c1cea1af04#mitv://generationnexxxt.com:19806/9388262af2604cc798800736d070d39e
 三立新闻,P2p://generationnexxxt.com:19806/9388262af2604cc798800736d070d39e
 纬来体育,rtmp://f13h.mine.nu/sat/tv721
