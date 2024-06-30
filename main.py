@@ -158,7 +158,7 @@ def updateChannelUrlsM3U(channels, template_channels):
                         if channel_name in channels[category]:
                             for url in channels[category][channel_name]:
                                 if url and url not in written_urls and not any(blacklist in url for blacklist in config.url_blacklist):  # Check if URL is not already written and not in blacklist
-                                    f_m3u.write(f"#EXTINF:-1 tvg-id=\"\" tvg-name=\"{channel_name}\" tvg-logo=\"https://gitee.com/yuanzl77/TVBox-logo/raw/main/png/{channel_name}.png\" group-title=\"{category}\",{channel_name}\n")
+                                    f_m3u.write(f"#EXTINF:-1 \" tvg-name=\"{channel_name}\" tvg-logo=\"https://gitee.com/yuanzl77/TVBox-logo/raw/main/png/{channel_name}.png\" group-title=\"{category}\",{channel_name}\n")
                                     f_m3u.write(url + "\n")
                                     f_txt.write(f"{channel_name},{url}\n")
                                     written_urls.add(url)  # Add URL to written URLs set
