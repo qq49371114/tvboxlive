@@ -1,4 +1,4 @@
-#EXTM3U x-tvg-url="https://mirror.ghproxy.com/raw.githubusercontent.com/qq49371114/tviptv/Files/EPG.xml" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}＂
+#EXTM3U x-tvg-url="https://mirror.ghproxy.com/raw.githubusercontent.com/qq49371114/tviptv/Files/EPG.xml"
 #EXTINF:-1 tvg-id="1" tvg-name="请阅读-请勿用于非法用途" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",请阅读-本线路只做测试
 https://liuliuliu.tv/api/channels/1997/stream
 #EXTINF:-1 tvg-id="1" tvg-name="🐯遥遥领先专用🐯" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",🐯遥遥领先专用🐯
