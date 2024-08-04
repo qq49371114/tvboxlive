@@ -1,13 +1,13 @@
 import re
 import requests
-import config
+import logging
 from collections import OrderedDict
 from datetime import datetime
+import config
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.FileHandler("function.log", "w", encoding="utf-8"), logging.StreamHandler()])
 
 def parse_template(template_file):
-    """
-    Parse the template file to extract channel names.
-    """
     template_channels = OrderedDict()
     current_category = None
 
@@ -25,9 +25,6 @@ def parse_template(template_file):
     return template_channels
 
 def fetch_channels(url):
-    """
-    Fetch channel items from a URL.
-    """
     channels = OrderedDict()
 
     try:
@@ -35,68 +32,48 @@ def fetch_channels(url):
         response.raise_for_status()
         response.encoding = 'utf-8'
         lines = response.text.split("\n")
-
         current_category = None
+        is_m3u = any("#EXTINF" in line for line in lines[:15])
+        source_type = "m3u" if is_m3u else "txt"
+        logging.info(f"url: {url} 获取成功，判断为{source_type}格式")
 
-        for line in lines:
-            line = line.strip()
-            if "#genre#" in line:
-                current_category = line.split(",")[0].strip()
-                channels[current_category] = []
-            elif current_category:
-                match = re.match(r"^(.*?),(.*?)$", line)
-                if match:
-                    channel_name = match.group(1).strip()
-                    channel_url = match.group(2).strip()
-                    channels[current_category].append((channel_name, channel_url))
-                elif line:  # If it's not an empty line and doesn't match comma-separated pattern
-                    channels[current_category].append((line, ''))
-    except requests.RequestException as e:
-        print(f"Failed to fetch channels from the URL: {url}, Error: {e}")
-
-    return channels
-
-def getChannelItems(template_channels, source_urls):
-    """
-    Get the channel items from the source URLs
-    """
-    channels = OrderedDict()
-
-    for category in template_channels:
-        channels[category] = OrderedDict()
-
-    for url in source_urls:
-        if url.endswith(".m3u"):
-            converted_url = f"https://fanmingming.com/txt?url={url}"
-            response = requests.get(converted_url)
+        if is_m3u:
+            for line in lines:
+                line = line.strip()
+                if line.startswith("#EXTINF"):
+                    match = re.search(r'group-title="(.*?)",(.*)', line)
+                    if match:
+                        current_category = match.group(1).strip()
+                        channel_name = match.group(2).strip()
+                        if current_category not in channels:
+                            channels[current_category] = []
+                elif line and not line.startswith("#"):
+                    channel_url = line.strip()
+                    if current_category and channel_name:
+                        channels[current_category].append((channel_name, channel_url))
         else:
-            response = requests.get(url)
-
-        if response.status_code == 200:
-            response.encoding = 'utf-8'
-            lines = response.text.split("\n")
-
-            current_category = None
-
             for line in lines:
                 line = line.strip()
                 if "#genre#" in line:
                     current_category = line.split(",")[0].strip()
-                else:
-                    match = re.match(r"^(.*?),(?!#genre#)(.*?)$", line)
-                    if match and current_category in channels:
+                    channels[current_category] = []
+                elif current_category:
+                    match = re.match(r"^(.*?),(.*?)$", line)
+                    if match:
                         channel_name = match.group(1).strip()
-                        if channel_name in template_channels[current_category]:
-                            channels[current_category].setdefault(channel_name, []).append(match.group(2).strip())
-        else:
-            print(f"Failed to fetch channel items from the source URL: {url}")
+                        channel_url = match.group(2).strip()
+                        channels[current_category].append((channel_name, channel_url))
+                    elif line:
+                        channels[current_category].append((line, ''))
+        if channels:
+            categories = ", ".join(channels.keys())
+            logging.info(f"url: {url} 爬取成功✅，包含频道分类: {categories}")
+    except requests.RequestException as e:
+        logging.error(f"url: {url} 爬取失败❌, Error: {e}")
 
     return channels
 
 def match_channels(template_channels, all_channels):
-    """
-    Match the channels from all channels with the template channels.
-    """
     matched_channels = OrderedDict()
 
     for category, channel_list in template_channels.items():
@@ -110,13 +87,9 @@ def match_channels(template_channels, all_channels):
     return matched_channels
 
 def filter_source_urls(template_file):
-    """
-    Filter source URL.
-    """
     template_channels = parse_template(template_file)
     source_urls = config.source_urls
 
-    # Fetch channels from all source URLs
     all_channels = OrderedDict()
     for url in source_urls:
         fetched_channels = fetch_channels(url)
@@ -126,42 +99,61 @@ def filter_source_urls(template_file):
             else:
                 all_channels[category] = channel_list
 
-    # Match the fetched channels with the template
     matched_channels = match_channels(template_channels, all_channels)
 
     return matched_channels, template_channels
 
+def is_ipv6(url):
+    return re.match(r'^http:\/\/\[[0-9a-fA-F:]+\]', url) is not None
+
 def updateChannelUrlsM3U(channels, template_channels):
-    """
-    Update the category and channel URLs to the final file in M3U format
-    """
-    written_urls = set()  # Set to store written URLs
+    written_urls = set()
 
     current_date = datetime.now().strftime("%Y-%m-%d")
+    for group in config.announcements:
+        for announcement in group['entries']:
+            if announcement['name'] is None:
+                announcement['name'] = current_date
 
     with open("live.m3u", "w", encoding="utf-8") as f_m3u:
-        f_m3u.write("""#EXTM3U x-tvg-url="https://mirror.ghproxy.com/raw.githubusercontent.com/qq49371114/tviptv/Files/EPG.xml" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}＂\n""")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="请阅读-请勿用于非法用途" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",请阅读-本线路只做测试\n""")
-        f_m3u.write("https://liuliuliu.tv/api/channels/1997/stream\n")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="🐯遥遥领先专用🐯" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",🐯遥遥领先专用🐯\n""")
-        f_m3u.write("https://liuliuliu.tv/api/channels/233/stream\n")
-        f_m3u.write("""#EXTINF:-1 tvg-id="1" tvg-name="更新日期" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",更新日期\n""")
-        f_m3u.write("https://gitlab.com/lr77/IPTV/-/raw/main/%E4%B8%BB%E8%A7%92.mp4\n")
-        f_m3u.write(f"""#EXTINF:-1 tvg-id="1" tvg-name="{current_date}" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="公告",{current_date}\n""")
-        f_m3u.write("https://gitlab.com/lr77/IPTV/-/raw/main/%E8%B5%B7%E9%A3%8E%E4%BA%86.mp4\n")
+        f_m3u.write(f"""#EXTM3U x-tvg-url={",".join(f'"{epg_url}"' for epg_url in config.epg_urls)}\n""")
 
         with open("live.txt", "w", encoding="utf-8") as f_txt:
+            for group in config.announcements:
+                f_txt.write(f"{group['channel']},#genre#\n")
+                for announcement in group['entries']:
+                    f_m3u.write(f"""#EXTINF:-1 tvg-id="1" tvg-name="{announcement['name']}" tvg-logo="{announcement['logo']}" group-title="{group['channel']}",{announcement['name']}\n""")
+                    f_m3u.write(f"{announcement['url']}\n")
+                    f_txt.write(f"{announcement['name']},{announcement['url']}\n")
+
             for category, channel_list in template_channels.items():
                 f_txt.write(f"{category},#genre#\n")
                 if category in channels:
                     for channel_name in channel_list:
                         if channel_name in channels[category]:
-                            for url in channels[category][channel_name]:
-                                if url and url not in written_urls and not any(blacklist in url for blacklist in config.url_blacklist):  # Check if URL is not already written and not in blacklist
-                                    f_m3u.write(f"#EXTINF:-1 \" tvg-name=\"{channel_name}\" tvg-logo=\"https://gitee.com/yuanzl77/TVBox-logo/raw/main/png/{channel_name}.png\" group-title=\"{category}\",{channel_name}\n")
-                                    f_m3u.write(url + "\n")
-                                    f_txt.write(f"{channel_name},{url}\n")
-                                    written_urls.add(url)  # Add URL to written URLs set
+                            sorted_urls = sorted(channels[category][channel_name], key=lambda url: not is_ipv6(url) if config.ip_version_priority == "ipv6" else is_ipv6(url))
+                            filtered_urls = []
+                            for url in sorted_urls:
+                                if url and url not in written_urls and not any(blacklist in url for blacklist in config.url_blacklist):
+                                    filtered_urls.append(url)
+                                    written_urls.add(url)
+
+                            total_urls = len(filtered_urls)
+                            for index, url in enumerate(filtered_urls, start=1):
+                                if is_ipv6(url):
+                                    url_suffix = f"$🐯🐯•IPV6" if total_urls == 1 else f"$🐯🐯•IPV6『线路{index}』"
+                                else:
+                                    url_suffix = f"$🐯🐯•IPV4" if total_urls == 1 else f"$🐯🐯•IPV4『线路{index}』"
+                                if '$' in url:
+                                    base_url = url.split('$', 1)[0]
+                                else:
+                                    base_url = url
+
+                                new_url = f"{base_url}{url_suffix}"
+
+                                f_m3u.write(f"#EXTINF:-1 tvg-id=\"{index}\" tvg-name=\"{channel_name}\" tvg-logo=\"https://gitee.com/yuanzl77/TVBox-logo/raw/main/png/{channel_name}.png\" group-title=\"{category}\",{channel_name}\n")
+                                f_m3u.write(new_url + "\n")
+                                f_txt.write(f"{channel_name},{new_url}\n")
 
             f_txt.write("\n")
 
