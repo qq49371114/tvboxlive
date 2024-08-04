@@ -80,6 +80,6 @@ epg_urls = [
     "http://epg.aptvapp.com/xml",
     "https://epg.pw/xmltv/epg_CN.xml",
     "https://epg.pw/xmltv/epg_HK.xml",
-    "https://epg.pw/xmltv/epg_TW.xml"，
+    "https://epg.pw/xmltv/epg_TW.xml",
     "https://mirror.ghproxy.com/raw.githubusercontent.com/qq49371114/tviptv/Files/EPG.xml"
 ]
