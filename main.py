@@ -4,6 +4,7 @@ import logging
 from collections import OrderedDict
 from datetime import datetime
 import config
+from security import safe_requests
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.FileHandler("function.log", "w", encoding="utf-8"), logging.StreamHandler()])
 
@@ -28,7 +29,7 @@ def fetch_channels(url):
     channels = OrderedDict()
 
     try:
-        response = requests.get(url)
+        response = safe_requests.get(url)
         response.raise_for_status()
         response.encoding = 'utf-8'
         lines = response.text.split("\n")
